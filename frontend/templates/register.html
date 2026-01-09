@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register | Project Review System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.container{
+    background:#fff;
+    width:100%;
+    max-width:420px;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 15px 30px rgba(0,0,0,.2);
+}
+h2{text-align:center;margin-bottom:20px}
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#667eea;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+}
+button:hover{background:#5a67d8}
+.message{
+    text-align:center;
+    margin-bottom:15px;
+    font-weight:600;
+}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2>Create Account</h2>
+
+<div id="msg" class="message"></div>
+
+<!-- Registration Form -->
+<div id="registerBox">
+<input id="username" placeholder="Username" required>
+<input id="email" type="email" placeholder="Email" required>
+<input id="password" type="password" placeholder="Password" required>
+<input id="confirm_password" type="password" placeholder="Confirm Password" required>
+<button onclick="register()">Register</button>
+</div>
+
+<!-- OTP Verification -->
+<div id="otpBox" class="hidden">
+<input id="otp" placeholder="Enter OTP">
+<button onclick="verifyOTP()">Verify OTP</button>
+</div>
+
+<p style="text-align:center;margin-top:15px">
+<a href="/auth/login">Already have an account?</a>
+</p>
+</div>
+
+<script>
+function showMsg(text,color="red"){
+    msg.innerText=text;
+    msg.style.color=color;
+}
+
+async function register(){
+    const res = await fetch("/auth/register",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            username:username.value,
+            email:email.value,
+            password:password.value,
+            confirm_password:confirm_password.value
+        })
+    });
+    const data = await res.json();
+    if(data.success){
+        showMsg("OTP sent to email","green");
+        registerBox.classList.add("hidden");
+        otpBox.classList.remove("hidden");
+    }else showMsg(data.error);
+}
+
+async function verifyOTP(){
+    const res = await fetch("/auth/verify-registration-otp",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({otp:otp.value})
+    });
+    const data = await res.json();
+    if(data.success){
+        alert("Registration successful!");
+        window.location="/auth/login";
+    }else showMsg(data.error);
+}
+</script>
+</body>
+</html>

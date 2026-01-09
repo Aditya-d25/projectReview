@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login | Project Review System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.container{
+    background:#fff;
+    width:100%;
+    max-width:400px;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 15px 30px rgba(0,0,0,.2);
+}
+h2{text-align:center;margin-bottom:20px}
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#667eea;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    font-size:16px;
+    cursor:pointer;
+}
+button:hover{background:#5a67d8}
+.message{text-align:center;margin-bottom:10px;font-weight:600}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2>Login</h2>
+<div id="msg" class="message"></div>
+
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<p style="text-align:center;margin-top:15px">
+<a href="/auth/forgot-password">Forgot Password?</a><br>
+<a href="/auth/register">Create Account</a>
+</p>
+</div>
+
+<script>
+async function login(){
+    const res = await fetch("/auth/login",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            username:username.value,
+            password:password.value
+        })
+    });
+    const data = await res.json();
+    if(data.success) window.location=data.redirect;
+    else msg.innerText=data.error;
+}
+</script>
+</body>
+</html>

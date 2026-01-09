@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Review IV - Testing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common-styles.css') }}">
+    <style>
+        /* ==================== THEME VARIABLES ==================== */
+
+        :root {
+            /* Light Theme Colors (Default) */
+            --primary-bg: #ffffff;
+            --secondary-bg: #f8fafc;
+            --accent-bg: #eef2f7;
+            --card-bg: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --border-hover: #cbd5e0;
+            --primary-blue: #3182ce;
+            --primary-blue-hover: #2c5aa0;
+            --primary-blue-light: #bee3f8;
+            --success-green: #38a169;
+            --success-green-hover: #2f855a;
+            --success-green-light: #c6f6d5;
+            --warning-orange: #ed8936;
+            --warning-orange-hover: #dd6b20;
+            --warning-orange-light: #fbd38d;
+            --danger-red: #e53e3e;
+            --danger-red-light: #fed7d7;
+            --accent-purple: #805ad5;
+            --accent-teal: #319795;
+            --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --border-radius: 0.5rem;
+            --border-radius-lg: 0.75rem;
+
+            /* Gradient backgrounds */
+            /* --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+            --gradient-header: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            --gradient-button: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            --gradient-success: linear-gradient(135deg, var(--success-green), var(--accent-teal));
+        }
+
+        /* Dark Theme Colors */
+        [data-theme="dark"] {
+            --primary-bg: #1a202c;
+            --secondary-bg: #2d3748;
+            --accent-bg: #4a5568;
+            --card-bg: #2d3748;
+            --text-primary: #f7fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #cbd5e0;
+            --border-color: #4a5568;
+            --border-hover: #718096;
+            --primary-blue: #63b3ed;
+            --primary-blue-hover: #4299e1;
+            --primary-blue-light: #2c5282;
+            --success-green: #48bb78;
+            --success-green-hover: #38a169;
+            --success-green-light: #2f855a;
+            --warning-orange: #f6ad55;
+            --warning-orange-hover: #ed8936;
+            --warning-orange-light: #dd6b20;
+            --danger-red: #fc8181;
+            --danger-red-light: #c53030;
+            --accent-purple: #9f7aea;
+            --accent-teal: #4fd1c5;
+            --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+
+            /* Dark theme gradients */
+            /* --gradient-primary: linear-gradient(135deg, #4c51bf 0%, #6b46c1 100%); */
+            --gradient-header: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            --gradient-button: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            --gradient-success: linear-gradient(135deg, var(--success-green), var(--accent-teal));
+        }
+
+        /* ==================== THEME TOGGLE BUTTON ==================== */
+
+        .theme-toggle {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 20px rgba(99, 179, 237, 0.3);
+        }
+
+        .theme-toggle-icon {
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Hide sun in dark mode, hide moon in light mode */
+        [data-theme="light"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        /* Rotation animation on click */
+        .theme-toggle.rotating {
+            animation: rotate360 0.5s ease;
+        }
+
+        @keyframes rotate360 {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ==================== SMOOTH TRANSITIONS ==================== */
+
+        body,
+        form,
+        .section,
+        .card-bg,
+        input,
+        textarea,
+        button,
+        table,
+        th,
+        td,
+        .question,
+        .radio-group label,
+        .menu-dropdown,
+        .menu-item {
+            transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        /* ==================== BASE STYLES (EXISTING) ==================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 2rem 1rem;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        form {
+            background: var(--primary-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Header styling */
+        h1,
+        h2 {
+            text-align: center;
+            margin: 0 0 2.5rem 0;
+            color: var(--text-primary);
+            font-size: 2.25rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        /* Light theme gradient text */
+        [data-theme="light"] h1,
+        [data-theme="light"] h2 {
+            background: var(--primary-blue), var(--accent-purplelinear-gradient(135deg, ));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Dark theme - solid color for better visibility */
+        [data-theme="dark"] h1,
+        [data-theme="dark"] h2 {
+            color: #bee3f8;
+            background: none;
+            -webkit-text-fill-color: #1a202c;
+        }
+
+        h1::after,
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            border-radius: 2px;
+        }
+
+        /* Navigation links */
+        .nav-link {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-bg);
+            color: var(--primary-blue);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border-color);
+        }
+
+        .nav-link:hover {
+            background: var(--primary-blue);
+            color: var(--primary-bg);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Menu Styles */
+        .menu-container {
+            position: fixed;
+            top: 20px;
+            left: 50px;
+            z-index: 1000;
+        }
+
+        .menu-toggle {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .menu-toggle:hover {
+            background: var(--accent-bg);
+        }
+
+        .menu-line {
+            width: 20px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active .menu-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active .menu-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active .menu-line:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        .menu-dropdown {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .menu-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: background-color 0.2s;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            background: var(--accent-bg);
+        }
+
+        .menu-item.current {
+            background: var(--accent-bg);
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .menu-item .icon {
+            font-size: 18px;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 8px 0;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .menu-container {
+                top: 1rem;
+                left: 1rem;
+            }
+
+            .menu-toggle {
+                width: 2.75rem;
+                height: 2.75rem;
+            }
+
+            .menu-line {
+                width: 1.5rem;
+            }
+
+            .menu-dropdown {
+                min-width: 200px;
+                left: -1rem;
+            }
+
+            .theme-toggle {
+                top: 80px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .logout-btn {
+                top: 15px;
+                right: 15px;
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-dropdown {
+                position: fixed;
+                top: 4rem;
+                left: 1rem;
+                right: 1rem;
+                width: auto;
+                min-width: auto;
+            }
+
+            .menu-dropdown::before {
+                left: 2rem;
+            }
+
+            .menu-item:hover {
+                padding-left: 1.5rem;
+            }
+        }
+
+        .save-section {
+            margin-left: 42.5%;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        /* Form inputs styling */
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .numeric-input {
+            display: flex;
+        }
+
+        .per {
+            margin-top: 10%;
+            margin-left: 10px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: 0;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.2);
+            transform: translateY(-1px);
+        }
+
+        input[type="text"]:hover,
+        input[type="date"]:hover,
+        input[type="number"]:hover,
+        textarea:hover {
+            border-color: var(--primary-blue);
+        }
+
+        /* Section styling */
+        .section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 2rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-blue);
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .section h3 {
+            margin: 0 0 2rem 0;
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            padding: 1.25rem 1.5rem;
+            background: var(--accent-bg);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Question styling */
+        .question {
+            background: var(--accent-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.75rem;
+            margin-bottom: 1.25rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .question:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateX(4px);
+        }
+
+        .question>label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: 1rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .question-number {
+            background: var(--gradient-button);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Radio group styling */
+        .radio-group {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--primary-bg);
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            min-height: 3.5rem;
+            min-width: 85px;
+            margin-bottom: 0;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .radio-group label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 179, 237, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .radio-group label:hover::before {
+            left: 100%;
+        }
+
+        .radio-group label:hover {
+            border-color: var(--primary-blue);
+            background: var(--primary-blue-light);
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 0.5rem;
+            accent-color: var(--primary-blue);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Light theme radio button */
+        [data-theme="light"] .radio-group input[type="radio"] {
+            accent-color: var(--primary-blue);
+            filter: none;
+        }
+
+        /* Dark theme radio button - better visibility */
+        [data-theme="dark"] .radio-group input[type="radio"] {
+            accent-color: #63b3ed;
+        }
+
+
+        /* Dark theme - unchecked radio button */
+        [data-theme="dark"] .radio-group input[type="radio"]:not(:checked) {
+            background-color: var(--secondary-bg);
+            border: 2px solid var(--text-muted);
+            appearance: none;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        /* Dark theme - checked radio button */
+        [data-theme="dark"] .radio-group input[type="radio"]:checked {
+            background-color: white;
+            border: 3px solid white;
+            appearance: none;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        /* Add inner dot for checked state in dark mode */
+        [data-theme="dark"] .radio-group input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #63b3ed;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Hover effect for radio buttons in dark theme */
+        [data-theme="dark"] .radio-group input[type="radio"]:hover {
+            border-color: #63b3ed;
+            box-shadow: 0 0 8px rgba(99, 179, 237, 0.4);
+        }
+
+        /* Enhanced Radio Button Selection Styling */
+
+        .radio-group input[type="radio"]:checked+span,
+        .radio-group label:has(input[type="radio"]:checked) {
+            background: var(--gradient-button);
+            border-color: var(--primary-blue);
+            color: white;
+            box-shadow: 0 0 25px rgba(99, 179, 237, 0.6),
+                0 0 15px rgba(99, 179, 237, 0.4),
+                inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            transform: scale(1.08);
+            font-weight: 700;
+            border-width: 3px;
+        }
+
+        /* Dark mode selected radio button */
+        [data-theme="dark"] .radio-group input[type="radio"]:checked+span,
+        [data-theme="dark"] .radio-group label:has(input[type="radio"]:checked) {
+            background: linear-gradient(135deg, #4299e1, #9f7aea);
+            border-color: #63b3ed;
+            box-shadow: 0 0 30px rgba(99, 179, 237, 0.8),
+                0 0 20px rgba(99, 179, 237, 0.5),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        /* Add glow animation to selected radio */
+        .radio-group input[type="radio"]:checked+span::after,
+        .radio-group label:has(input[type="radio"]:checked)::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            border-radius: var(--border-radius);
+            z-index: -1;
+            opacity: 0.5;
+            filter: blur(8px);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        /* Improve unselected radio buttons for better contrast */
+        .radio-group label {
+            border-width: 2px;
+            background: var(--primary-bg);
+        }
+
+        [data-theme="dark"] .radio-group label {
+            background: var(--secondary-bg);
+            border-color: var(--border-hover);
+        }
+
+        /* Add check icon to selected radio (optional enhancement) */
+        .radio-group input[type="radio"]:checked+span::before,
+        .radio-group label:has(input[type="radio"]:checked)::before {
+            content: '✓';
+            margin-right: 6px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            background: var(--primary-bg);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 5px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        th,
+        td {
+            padding: 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--secondary-bg);
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+        }
+
+        table th+th {
+            border-left: 1px solid var(--border-color);
+        }
+
+        td {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        td:hover {
+            background: var(--primary-blue-light);
+            transition: background 0.2s ease;
+        }
+
+        td input[type="number"],
+        td input[type="text"] {
+            width: 90px;
+            padding: 0.625rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: 600;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            margin-bottom: 0;
+        }
+
+        table td+td {
+            border-left: 2px solid var(--border-color);
+        }
+
+        td input[type="number"]:focus,
+        td input[type="text"]:focus {
+            outline: 0;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.2);
+            transform: scale(1.05);
+        }
+
+        .total {
+            background: var(--secondary-bg) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--primary-blue) !important;
+            font-weight: 700;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Comment box styling */
+        .comment-box {
+            margin-top: 10px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .comment-box label {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .comment-box textarea {
+            min-height: 140px;
+            resize: vertical;
+            margin-bottom: 0;
+            border: 2px solid var(--border-color);
+        }
+
+        /* Button styling */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 2.5rem 0 0 0;
+            border-top: 2px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        #generate-pdf,
+        #save-form,
+        button[onclick*="submitForm"],
+        button[onclick*="saveForm"] {
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(49, 130, 206, 0.4);
+        }
+
+        #generate-pdf:hover:not(:disabled),
+        #save-form:hover:not(:disabled),
+        button[onclick*="submitForm"]:hover:not(:disabled),
+        button[onclick*="saveForm"]:hover:not(:disabled) {
+            background: var(--primary-blue-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(49, 130, 206, 0.5);
+        }
+
+        #next-review,
+        button[onclick*="nextReview"] {
+            background: var(--success-green);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(56, 161, 105, 0.4);
+        }
+
+        #next-review:hover:not(:disabled),
+        button[onclick*="nextReview"]:hover:not(:disabled) {
+            background: var(--success-green-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(56, 161, 105, 0.5);
+        }
+
+        #back,
+        #back-review,
+        button[onclick*="back"],
+        button[onclick*="previousReview"],
+        .back-button {
+            background: var(--warning-orange);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(237, 137, 54, 0.4);
+        }
+
+        #back:hover:not(:disabled),
+        #back-review:hover:not(:disabled),
+        button[onclick*="back"]:hover:not(:disabled),
+        button[onclick*="previousReview"]:hover:not(:disabled),
+        .back-button:hover:not(:disabled) {
+            background: var(--warning-orange-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(237, 137, 54, 0.5);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Logout button */
+        .logout-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+            text-decoration: none;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Error states */
+        .is-invalid {
+            border-color: var(--danger-red) !important;
+            box-shadow: 0 0 0 3px rgba(252, 129, 129, 0.2);
+        }
+
+        .validation-error {
+            border-color: var(--danger-red) !important;
+            background: var(--danger-red-light) !important;
+        }
+
+        /* Loading animation */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Attendance table styles */
+        .attendance-container {
+            overflow-x: auto;
+        }
+
+        .attendance-table table {
+            width: 100%;
+            min-width: 400px;
+        }
+
+        .attendance-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--success-green);
+        }
+
+        .roll-no,
+        .student-name {
+            color: var(--text-primary);
+        }
+
+        .present-cell {
+            text-align: center;
+        }
+
+        /* Mark input styles */
+        .mark-input {
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .mark-input:read-only {
+            background: var(--accent-bg);
+            cursor: pointer;
+        }
+
+        .mark-input[data-absent="true"] {
+            background: var(--danger-red-light) !important;
+            color: var(--text-primary) !important;
+            opacity: 0.7;
+            font-style: italic;
+            border-color: var(--danger-red) !important;
+        }
+
+        [data-theme="dark"] .mark-input[data-absent="true"] {
+            background: var(--danger-red-light) !important;
+            color: #1a202c !important;
+            opacity: 0.8;
+        }
+
+        /* Performance table */
+        #performance-table {
+            width: 100%;
+        }
+
+        #performance-table th,
+        #performance-table td {
+            text-align: center;
+            padding: 0.75rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .question {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+
+            .question>label {
+                width: 100%;
+            }
+
+            .radio-group {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+
+            form {
+                padding: 1.5rem;
+            }
+
+            h1,
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .question {
+                padding: 1.25rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .radio-group {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .radio-group label {
+                min-width: 75px;
+                padding: 0.75rem 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            button {
+                width: 100%;
+                min-width: auto;
+            }
+
+            table {
+                font-size: 0.875rem;
+                overflow-x: auto;
+                display: block;
+                white-space: nowrap;
+            }
+
+            th,
+            td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            td input[type="number"],
+            td input[type="text"] {
+                width: 70px;
+                padding: 0.5rem;
+            }
+
+            .save-section {
+                margin-left: 0;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .radio-group {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+
+            .radio-group label {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .nav-link {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 0.5rem;
+                margin-right: 0;
+            }
+
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .theme-toggle-icon {
+                font-size: 20px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                max-width: none;
+                padding: 1rem;
+            }
+
+            form {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+
+            button,
+            .button-group,
+            .nav-link,
+            .theme-toggle,
+            .logout-btn,
+            .menu-container {
+                display: none !important;
+            }
+
+            .section::before {
+                background: #ccc;
+            }
+
+            /* Force light theme for printing */
+            * {
+                background: white !important;
+                color: black !important;
+                border-color: #ccc !important;
+            }
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus indicators for better accessibility */
+        .radio-group input[type="radio"]:focus+label,
+        button:focus,
+        input:focus,
+        textarea:focus,
+        .theme-toggle:focus {
+            outline: 2px solid var(--primary-blue);
+            outline-offset: 2px;
+        }
+
+        /* ==================== ADDITIONAL DARK MODE ENHANCEMENTS ==================== */
+
+        /* Page header styling for dark mode */
+        .page-header {
+            background: var(--gradient-primary);
+            transition: background 0.3s ease;
+        }
+
+        /* Improve readability in dark mode */
+        [data-theme="dark"] .section h3 {
+            background: var(--accent-bg);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .question {
+            background: var(--accent-bg);
+        }
+
+        /* Dark mode specific gradients */
+        [data-theme="dark"] h1,
+        [data-theme="dark"] h2 {
+            color: var(--primary-blue);
+            background: none;
+            -webkit-text-fill-color: var(--primary-blue);
+        }
+
+        [data-theme="dark"] h1::after,
+        [data-theme="dark"] h2::after {
+            background: var(--primary-blue);
+        }
+
+        /* Date input icon - white in dark theme for Chrome/Brave */
+        [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) brightness(2);
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        /* Ensure the icon is visible on hover */
+        [data-theme="dark"] input[type="date"]:hover::-webkit-calendar-picker-indicator {
+            filter: invert(1) brightness(2.5);
+        }
+
+        /* Force icon visibility with important */
+        [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) brightness(2) !important;
+            opacity: 1 !important;
+            background-color: transparent !important;
+        }
+
+        /* Additional styling for date input */
+        [data-theme="dark"] input[type="date"] {
+            color-scheme: dark;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        /* Alternative approach - if above doesn't work, use this */
+        [data-theme="dark"] input[type="date"] {
+            position: relative;
+        }
+
+        [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
+            cursor: pointer;
+            filter: none;
+        }
+
+        /* Scrollbar styling for dark mode */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 6px;
+            border: 2px solid var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-hover);
+        }
+
+        /* Firefox scrollbar */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) var(--secondary-bg);
+        }
+
+        /* Placeholder text color */
+        ::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        /* Selection color */
+        ::selection {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        ::-moz-selection {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Dark mode input autofill fix */
+        [data-theme="dark"] input:-webkit-autofill,
+        [data-theme="dark"] input:-webkit-autofill:hover,
+        [data-theme="dark"] input:-webkit-autofill:focus,
+        [data-theme="dark"] textarea:-webkit-autofill,
+        [data-theme="dark"] textarea:-webkit-autofill:hover,
+        [data-theme="dark"] textarea:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--text-primary);
+            -webkit-box-shadow: 0 0 0px 1000px var(--primary-bg) inset;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+
+        [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: brightness(0) invert(1) !important;
+            -webkit-filter: brightness(0) invert(1) !important;
+            cursor: pointer;
+            opacity: 1 !important;
+        }
+
+        /* Smooth theme transition */
+        body.theme-transitioning * {
+            transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease !important;
+        }
+
+        /* Update indicator styles */
+        #update-indicator {
+            background: var(--warning-orange-light);
+            border-left-color: var(--warning-orange);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] #update-indicator {
+            background: var(--warning-orange-light);
+            color: var(--primary-bg);
+        }
+
+        /* Marks hint message */
+        #marks-hint {
+            background: var(--primary-blue-light);
+            border-left-color: var(--primary-blue);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] #marks-hint {
+            background: var(--primary-blue-light);
+            color: var(--primary-bg);
+        }
+
+        /* Table responsive wrapper */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Content wrapper */
+        .content-wrapper {
+            padding: 20px;
+        }
+
+        /* Additional utility classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem;
+        }
+
+        .p-1 {
+            padding: 0.5rem;
+        }
+
+        .p-2 {
+            padding: 1rem;
+        }
+
+        .p-3 {
+            padding: 1.5rem;
+        }
+
+        .p-4 {
+            padding: 2rem;
+        }
+
+        /* Hidden utility */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Visible utility */
+        .visible {
+            display: block !important;
+        }
+
+        /* ==================== END OF STYLES ==================== */
+    </style>
+</head>
+
+<body>
+    <a href="/auth/logout" class="logout-btn">Logout ➜]</a>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle Dark/Light Mode">
+        <span class="theme-toggle-icon sun-icon">☀️</span>
+        <span class="theme-toggle-icon moon-icon">🌙</span>
+    </button>
+    <div class="page-header">
+        <div class="header-center">
+            <h1>Project Review - IV</h1>
+        </div>
+        <div class="menu-container">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+            </button>
+
+            <div class="menu-dropdown" id="menuDropdown">
+                <!-- Admin-only items -->
+                {% if is_admin %}
+                <a href="/data-manager" class="menu-item">
+                    <span class="icon">🗄️</span>
+                    Database Manager
+                </a>
+
+
+                <a href="/pdf-viewer" class="menu-item">
+                    <span class="icon">📄</span>
+                    Generated PDFs
+                </a>
+                {% endif %}
+                <a href="/scheduler" class="menu-item">
+                    <span class="icon">📅</span>
+                    Review Scheduler
+                </a>
+                <a href="/attendance-dashboard" class="menu-item">
+                    <span class="icon">🙋</span>
+                    Attendance
+                </a>
+                <div class="menu-divider"></div>
+
+
+                <!-- Review Pages (Available to all logged-in users) -->
+                <a href="/review1" class="menu-item current">
+                    <span class="icon">📋</span>
+                    Review I - Scope
+                </a>
+
+                <a href="/review2" class="menu-item">
+                    <span class="icon">🎨</span>
+                    Review II - Design
+                </a>
+                <a href="/review0" class="menu-item ">
+                    <span class="icon">📌</span>
+                    MOCK Review
+                </a>
+                <a href="/review3" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    Review III - Implementation
+                </a>
+
+                <a href="/review4" class="menu-item">
+                    <span class="icon">🧪</span>
+                    Review IV - Testing
+                </a>
+
+                <a href="/final-sheet" class="menu-item">
+                    <span class="icon">📊</span>
+                    Review V - Final
+                </a>
+
+                <div class="menu-divider"></div>
+
+                <a href="/auth/logout" class="menu-item">
+                    <span class="icon">🚪</span>
+                    Logout ➜]
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <form id="form-data">
+
+            <label for="group_id">Group ID:</label>
+            <input type="text" id="group_id" name="group_id" placeholder="e.g., BIA-01" required autocomplete="off">
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+
+            <!-- ATTENDANCE SECTION -->
+            <div class="section">
+                <h3>ATTENDANCE</h3>
+                <div class="attendance-container">
+                    <div class="attendance-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Student Name</th>
+                                    <th>Present</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-tbody">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IMPLEMENTATION AND TESTING QUESTIONNAIRE -->
+            <div class="section">
+                <h3>IMPLEMENTATION AND TESTING</h3>
+
+                <div class="question">
+                    <label>1. Is every feature tested?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_1-y" name="que_4.1.1" value="Y" required>
+                        <label for="q4_1_1-y">Yes</label>
+                        <input type="radio" id="q4_1_1-n" name="que_4.1.1" value="N">
+                        <label for="q4_1_1-n">No</label>
+                        <input type="radio" id="q4_1_1-na" name="que_4.1.1" value="NA">
+                        <label for="q4_1_1-na">N/A</label>
+                        <input type="radio" id="q4_1_1-nc" name="que_4.1.1" value="NC">
+                        <label for="q4_1_1-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>2. Are all functions, user screens and navigation tested?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_2-y" name="que_4.1.2" value="Y" required>
+                        <label for="q4_1_2-y">Yes</label>
+                        <input type="radio" id="q4_1_2-n" name="que_4.1.2" value="N">
+                        <label for="q4_1_2-n">No</label>
+                        <input type="radio" id="q4_1_2-na" name="que_4.1.2" value="NA">
+                        <label for="q4_1_2-na">N/A</label>
+                        <input type="radio" id="q4_1_2-nc" name="que_4.1.2" value="NC">
+                        <label for="q4_1_2-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>3. Are test cases designed? (manual and automated)</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_3-y" name="que_4.1.3" value="Y" required>
+                        <label for="q4_1_3-y">Yes</label>
+                        <input type="radio" id="q4_1_3-n" name="que_4.1.3" value="N">
+                        <label for="q4_1_3-n">No</label>
+                        <input type="radio" id="q4_1_3-na" name="que_4.1.3" value="NA">
+                        <label for="q4_1_3-na">N/A</label>
+                        <input type="radio" id="q4_1_3-nc" name="que_4.1.3" value="NC">
+                        <label for="q4_1_3-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>4. Is testing tool used?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_4-y" name="que_4.1.4" value="Y" required>
+                        <label for="q4_1_4-y">Yes</label>
+                        <input type="radio" id="q4_1_4-n" name="que_4.1.4" value="N">
+                        <label for="q4_1_4-n">No</label>
+                        <input type="radio" id="q4_1_4-na" name="que_4.1.4" value="NA">
+                        <label for="q4_1_4-na">N/A</label>
+                        <input type="radio" id="q4_1_4-nc" name="que_4.1.4" value="NC">
+                        <label for="q4_1_4-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>5. Is result analysis done properly and proper conclusion drawn?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_5-y" name="que_4.1.5" value="Y" required>
+                        <label for="q4_1_5-y">Yes</label>
+                        <input type="radio" id="q4_1_5-n" name="que_4.1.5" value="N">
+                        <label for="q4_1_5-n">No</label>
+                        <input type="radio" id="q4_1_5-na" name="que_4.1.5" value="NA">
+                        <label for="q4_1_5-na">N/A</label>
+                        <input type="radio" id="q4_1_5-nc" name="que_4.1.5" value="NC">
+                        <label for="q4_1_5-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>6. Implementation status (code completion in percentage)</label>
+                    <div class="numeric-input">
+                        <div><input type="number" id="q4_1_6" name="que_4.1.6" min="0" max="100" step="0.1"
+                                placeholder="0-100" required></div>
+                        <div class="per">%</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PERFORMANCE EVALUATION TABLE (DYNAMIC) -->
+            <div class="table-responsive">
+                <h2 class="header">STUDENT PERFORMANCE EVALUATION</h2>
+                <table>
+                    <thead id="performance-thead">
+                        <!-- Dynamically generated -->
+                    </thead>
+                    <tbody id="performance-tbody">
+                        <!-- Dynamically generated -->
+                    </tbody>
+                    <tfoot id="performance-tfoot">
+                        <!-- Dynamically generated -->
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- COMMENTS -->
+            <div class="comment-box">
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments" placeholder="Enter any additional comments here"></textarea>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="save-section">
+                <button type="button" id="save-form" onclick="saveForm()">💾 Save Form</button>
+            </div>
+
+            <div class="button-group">
+                <button type="button" id="back-review" onclick="previousReview()">⬅ Previous Review</button>
+                <button type="button" id="generate-pdf" onclick="generatePDF()">📄 Generate PDF</button>
+                <button type="button" id="next-review" onclick="nextReview()">Next Review ➡</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/review4.js') }}"></script>
+    <script>
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeTheme();
+        });
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'dark' : 'light');
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            document.body.classList.add('theme-transitioning');
+
+            const toggleBtn = document.querySelector('.theme-toggle');
+            if (toggleBtn) {
+                toggleBtn.classList.add('rotating');
+                setTimeout(() => toggleBtn.classList.remove('rotating'), 500);
+            }
+
+            setTheme(newTheme);
+
+            setTimeout(() => document.body.classList.remove('theme-transitioning'), 300);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+
+            const toggleBtn = document.querySelector('.theme-toggle');
+            if (toggleBtn) {
+                toggleBtn.setAttribute('aria-label',
+                    theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'
+                );
+            }
+        }
+    </script>
+</body>
+
+</html>
