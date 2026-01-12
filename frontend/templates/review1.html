@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review-I Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common-styles.css') }}">
+
+</head>
+
+<body data-user-role="{{ user_role or 'guest' }}">
+    <!-- Fixed Header with Centered Title and Right-Aligned Button -->
+    <a href="/auth/logout" class="logout-btn">Logout ➜]</a>
+    
+
+    <div class="page-header">
+            
+        <div class="header-center">
+            <h1>Project Review - I</h1>
+        </div>
+        <div class="menu-container">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+            </button>
+
+            <div class="menu-dropdown" id="menuDropdown">
+                <!-- Admin-only items -->
+                {% if is_admin %}
+                <a href="/data-manager" class="menu-item">
+                    <span class="icon">🗄️</span>
+                    Database Manager
+                </a>
+                
+                
+                <a href="/pdf-viewer" class="menu-item">
+                    <span class="icon">📄</span>
+                    Generated PDFs
+                </a>
+                {% endif %}
+                <a href="/scheduler" class="menu-item">
+                    <span class="icon">📅</span>
+                    Review Scheduler
+                </a>
+                <a href="/attendance-dashboard" class="menu-item">
+                    <span class="icon">🙋</span>
+                    Attendance
+                </a>
+                <div class="menu-divider"></div>
+                
+
+                <!-- Review Pages (Available to all logged-in users) -->
+                <a href="/review1" class="menu-item current">
+                    <span class="icon">📋</span>
+                    Review I - Scope
+                </a>
+
+                <a href="/review2" class="menu-item">
+                    <span class="icon">🎨</span>
+                    Review II - Design
+                </a>
+                <a href="/review0" class="menu-item ">
+                    <span class="icon">📌</span>
+                    MOCK Review
+                </a>
+                <a href="/review3" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    Review III - Implementation
+                </a>
+
+                <a href="/review4" class="menu-item">
+                    <span class="icon">🧪</span>
+                    Review IV - Testing
+                </a>
+
+                <a href="/review5" class="menu-item">
+                    <span class="icon">📊</span>
+                    Review V - Final
+                </a>
+
+                <div class="menu-divider"></div>
+
+                <a href="/auth/logout" class="menu-item">
+                    <span class="icon">🚪</span>
+                    Logout ➜]
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <form id="form-data">
+            <!-- Removed the duplicate h2 title here -->
+
+            <label for="group_id">Group ID:</label>
+            <input type="text" id="group_id" name="group_id" required placeholder="eg: BIA-01" autocomplete="off">
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+            <div class="section">
+                <h3>ATTENDANCE</h3>
+                <div class="attendance-container">
+                    <div class="attendance-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Student Name</th>
+                                    <th>Present</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-tbody">
+                                <!-- Attendance rows will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <h3>REVIEW - I CHECKLIST : FINALIZATION OF SCOPE</h3>
+                <div class="question">
+                    <label>1. Is the statement short and concise (10-20 words maximum)?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ps1-yes" name="que_1.1.1" value="Y" required><label
+                            for="ps1-yes">Yes</label>
+                        <input type="radio" id="ps1-no" name="que_1.1.1" value="N"><label for="ps1-no">No</label>
+                        <input type="radio" id="ps1-na" name="que_1.1.1" value="NA"><label for="ps1-na">N/A</label>
+                        <input type="radio" id="ps1-nc" name="que_1.1.1" value="NC"><label for="ps1-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>2. Does the statement give clear indication about what your project will
+                        accomplish?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ps2-yes" name="que_1.1.2" value="Y" required><label
+                            for="ps2-yes">Yes</label>
+                        <input type="radio" id="ps2-no" name="que_1.1.2" value="N"><label for="ps2-no">No</label>
+                        <input type="radio" id="ps2-na" name="que_1.1.2" value="NA"><label for="ps2-na">N/A</label>
+                        <input type="radio" id="ps2-nc" name="que_1.1.2" value="NC"><label for="ps2-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>3. Can a person who is not familiar with the project understand scope of the project by
+                        reading the Project Problem Statement?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ps3-yes" name="que_1.1.3" value="Y" required><label
+                            for="ps3-yes">Yes</label>
+                        <input type="radio" id="ps3-no" name="que_1.1.3" value="N"><label for="ps3-no">No</label>
+                        <input type="radio" id="ps3-na" name="que_1.1.3" value="NA"><label for="ps3-na">N/A</label>
+                        <input type="radio" id="ps3-nc" name="que_1.1.3" value="NC"><label for="ps3-nc">NC</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>REQUIREMENT: SCOPE AND OBJECTIVES</h3>
+                <div class="question">
+                    <label>a. Are all aspects of the requirements document addressed in the design?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="req1-yes" name="que_1.2.1" value="Y" required><label
+                            for="req1-yes">Yes</label>
+                        <input type="radio" id="req1-no" name="que_1.2.1" value="N"><label for="req1-no">No</label>
+                        <input type="radio" id="req1-na" name="que_1.2.1" value="NA"><label for="req1-na">N/A</label>
+                        <input type="radio" id="req1-nc" name="que_1.2.1" value="NC"><label for="req1-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>b. Is the architecture / block diagram well defined and understood?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="req2-yes" name="que_1.2.2" value="Y" required><label
+                            for="req2-yes">Yes</label>
+                        <input type="radio" id="req2-no" name="que_1.2.2" value="N"><label for="req2-no">No</label>
+                        <input type="radio" id="req2-na" name="que_1.2.2" value="NA"><label for="req2-na">N/A</label>
+                        <input type="radio" id="req2-nc" name="que_1.2.2" value="NC"><label for="req2-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>c. The project's objective of study (what product, process, resource etc.) is being
+                        addressed?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="req3-yes" name="que_1.2.3" value="Y" required><label
+                            for="req3-yes">Yes</label>
+                        <input type="radio" id="req3-no" name="que_1.2.3" value="N"><label for="req3-no">No</label>
+                        <input type="radio" id="req3-na" name="que_1.2.3" value="NA"><label for="req3-na">N/A</label>
+                        <input type="radio" id="req3-nc" name="que_1.2.3" value="NC"><label for="req3-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>d. The project's purpose: is the purpose of project addressed properly (why it's being
+                        pursued: to evaluate, reduce, increase, etc.)?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="req4-yes" name="que_1.2.4" value="Y" required><label
+                            for="req4-yes">Yes</label>
+                        <input type="radio" id="req4-no" name="que_1.2.4" value="N"><label for="req4-no">No</label>
+                        <input type="radio" id="req4-na" name="que_1.2.4" value="NA"><label for="req4-na">N/A</label>
+                        <input type="radio" id="req4-nc" name="que_1.2.4" value="NC"><label for="req4-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>e. The project's viewpoint: Is the project's viewpoint understood? (Who is the project's
+                        end user)?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="req5-yes" name="que_1.2.5" value="Y" required><label
+                            for="req5-yes">Yes</label>
+                        <input type="radio" id="req5-no" name="que_1.2.5" value="N"><label for="req5-no">No</label>
+                        <input type="radio" id="req5-na" name="que_1.2.5" value="NA"><label for="req5-na">N/A</label>
+                        <input type="radio" id="req5-nc" name="que_1.2.5" value="NC"><label for="req5-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>f. Is the project goal statement in alignment with the sponsoring organization's business
+                        goals and mission?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="req6-yes" name="que_1.2.6" value="Y" required><label
+                            for="req6-yes">Yes</label>
+                        <input type="radio" id="req6-no" name="que_1.2.6" value="N"><label for="req6-no">No</label>
+                        <input type="radio" id="req6-na" name="que_1.2.6" value="NA"><label for="req6-na">N/A</label>
+                        <input type="radio" id="req6-nc" name="que_1.2.6" value="NC"><label for="req6-nc">NC</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>ANALYSIS</h3>
+                <div class="question">
+                    <label>1. Is information domain analysis complete, consistent and accurate?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ana1-yes" name="que_1.3.1" value="Y" required><label
+                            for="ana1-yes">Yes</label>
+                        <input type="radio" id="ana1-no" name="que_1.3.1" value="N"><label for="ana1-no">No</label>
+                        <input type="radio" id="ana1-na" name="que_1.3.1" value="NA"><label for="ana1-na">N/A</label>
+                        <input type="radio" id="ana1-nc" name="que_1.3.1" value="NC"><label for="ana1-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>2. Is problem statement categorized in identified area and targeted towards specific area
+                        therein?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ana2-yes" name="que_1.3.2" value="Y" required><label
+                            for="ana2-yes">Yes</label>
+                        <input type="radio" id="ana2-no" name="que_1.3.2" value="N"><label for="ana2-no">No</label>
+                        <input type="radio" id="ana2-na" name="que_1.3.2" value="NA"><label for="ana2-na">N/A</label>
+                        <input type="radio" id="ana2-nc" name="que_1.3.2" value="NC"><label for="ana2-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>3. Are external and internal interfaces properly defined?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ana3-yes" name="que_1.3.3" value="Y" required><label
+                            for="ana3-yes">Yes</label>
+                        <input type="radio" id="ana3-no" name="que_1.3.3" value="N"><label for="ana3-no">No</label>
+                        <input type="radio" id="ana3-na" name="que_1.3.3" value="NA"><label for="ana3-na">N/A</label>
+                        <input type="radio" id="ana3-nc" name="que_1.3.3" value="NC"><label for="ana3-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>4. Does the Use Case Model properly reflect the actors and their roles and
+                        responsibilities?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ana4-yes" name="que_1.3.4" value="Y" required><label
+                            for="ana4-yes">Yes</label>
+                        <input type="radio" id="ana4-no" name="que_1.3.4" value="N"><label for="ana4-no">No</label>
+                        <input type="radio" id="ana4-na" name="que_1.3.4" value="NA"><label for="ana4-na">N/A</label>
+                        <input type="radio" id="ana4-nc" name="que_1.3.4" value="NC"><label for="ana4-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>5. Are all requirements traceable to system level?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ana5-yes" name="que_1.3.5" value="Y" required><label
+                            for="ana5-yes">Yes</label>
+                        <input type="radio" id="ana5-no" name="que_1.3.5" value="N"><label for="ana5-no">No</label>
+                        <input type="radio" id="ana5-na" name="que_1.3.5" value="NA"><label for="ana5-na">N/A</label>
+                        <input type="radio" id="ana5-nc" name="que_1.3.5" value="NC"><label for="ana5-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>6. Is similar type of methodology / model used for existing work?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ana6-yes" name="que_1.3.6" value="Y" required><label
+                            for="ana6-yes">Yes</label>
+                        <input type="radio" id="ana6-no" name="que_1.3.6" value="N"><label for="ana6-no">No</label>
+                        <input type="radio" id="ana6-na" name="que_1.3.6" value="NA"><label for="ana6-na">N/A</label>
+                        <input type="radio" id="ana6-nc" name="que_1.3.6" value="NC"><label for="ana6-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>7. Are requirements consistent with schedule, resources and budget?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="ana7-yes" name="que_1.3.7" value="Y" required><label
+                            for="ana7-yes">Yes</label>
+                        <input type="radio" id="ana7-no" name="que_1.3.7" value="N"><label for="ana7-no">No</label>
+                        <input type="radio" id="ana7-na" name="que_1.3.7" value="NA"><label for="ana7-na">N/A</label>
+                        <input type="radio" id="ana7-nc" name="que_1.3.7" value="NC"><label for="ana7-nc">NC</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <h2>STUDENT PERFORMANCE EVALUATION</h2>
+                <table id="performance-table">
+                    <thead id="performance-thead"></thead>
+                    <tbody id="performance-tbody"></tbody>
+                    <tfoot id="performance-tfoot"></tfoot>
+                </table>
+            </div>
+
+            <div class="comment-box">
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="c1"></textarea>
+            </div>
+            <div class="save-section">
+                <button type="button" id="save-form" onclick="saveForm()">💾 Save Form</button>
+            </div>
+            <div class="button-group">
+                <button type="button" id="generate-pdf" onclick="generatePDF()">Generate PDF</button>
+                <button type="button" id="next-review" onclick="nextReview()">Next Review</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/review1.js') }}"></script>
+
+
+</body>
+
+</html>

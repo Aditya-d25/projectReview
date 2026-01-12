@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review-II Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common-styles.css') }}">
+</head>
+
+<body>
+    <a href="/auth/logout" class="logout-btn">Logout</a>
+    <div class="page-header">
+        <div class="header-left"></div>
+        <div class="header-center">
+            <h1>Mock Review</h1>
+        </div>
+        <div class="menu-container">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+            </button>
+
+            <div class="menu-dropdown" id="menuDropdown">
+                <a href="/data-manager" class="menu-item">
+                    <span class="icon">🗄️</span>
+                    Database Manager
+                </a>
+                <a href="/scheduler" class="menu-item">
+                    <span class="icon">📅</span>
+                    Review Scheduler
+                </a>
+                <a href="/attendance-dashboard" class="menu-item">
+                    <span class="icon">🙋</span>
+                    Attendance
+                </a>
+                <a href="/pdf_viewer" class="menu-item">
+                    <span class="icon">📄</span>
+                    Generated PDFs
+                </a>
+                <div class="menu-divider"></div>
+
+                <a href="/review1" class="menu-item">
+                    <span class="icon">📋</span>
+                    Review I - Scope
+                </a>
+
+                <a href="/review2" class="menu-item current">
+                    <span class="icon">🎨</span>
+                    Review II - Design
+                </a>
+
+                <a href="/review3" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    Review III - Implementation
+                </a>
+
+                <a href="/review4" class="menu-item">
+                    <span class="icon">🧪</span>
+                    Review IV - Testing
+                </a>
+
+                <a href="/review5" class="menu-item">
+                    <span class="icon">📊</span>
+                    Review V - Final
+                </a>
+
+                <div class="menu-divider"></div>
+
+                <a href="/" class="menu-item">
+                    <span class="icon">🏠</span>
+                    Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <form id="form-data">
+            <label for="group_id">Group ID:</label>
+            <input type="text" id="group_id" name="group_id" required placeholder="eg: BIA-01" autocomplete="off">
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+
+            <div class="section">
+                <h3>ATTENDANCE</h3>
+                <div class="attendance-container">
+                    <div class="attendance-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Student Name</th>
+                                    <th>Present</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-tbody">
+                                <!-- Attendance rows will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>DESIGN</h3>
+
+                <div class="question">
+                    <label>1. Are requirements reflected in the system architecture?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des1-yes" name="que_0.1.1" value="Y" required><label for="des1-yes">Yes</label>
+                        <input type="radio" id="des1-no" name="que_0.1.1" value="N"><label for="des1-no">No</label>
+                        <input type="radio" id="des1-na" name="que_0.1.1" value="NA"><label for="des1-na">N/A</label>
+                        <input type="radio" id="des1-nc" name="que_0.1.1" value="NC"><label for="des1-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>2. Does the design support both project (product) and project goals?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des2-yes" name="que_0.1.2" value="Y" required><label for="des2-yes">Yes</label>
+                        <input type="radio" id="des2-no" name="que_0.1.2" value="N"><label for="des2-no">No</label>
+                        <input type="radio" id="des2-na" name="que_0.1.2" value="NA"><label for="des2-na">N/A</label>
+                        <input type="radio" id="des2-nc" name="que_0.1.2" value="NC"><label for="des2-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>3. Does the design address all the issues from the requirements?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des3-yes" name="que_0.1.3" value="Y" required><label for="des3-yes">Yes</label>
+                        <input type="radio" id="des3-no" name="que_0.1.3" value="N"><label for="des3-no">No</label>
+                        <input type="radio" id="des3-na" name="que_0.1.3" value="NA"><label for="des3-na">N/A</label>
+                        <input type="radio" id="des3-nc" name="que_0.1.3" value="NC"><label for="des3-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>4. Is effective modularity achieved and modules are functionally independent?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des4-yes" name="que_0.1.4" value="Y" required><label for="des4-yes">Yes</label>
+                        <input type="radio" id="des4-no" name="que_0.1.4" value="N"><label for="des4-no">No</label>
+                        <input type="radio" id="des4-na" name="que_0.1.4" value="NA"><label for="des4-na">N/A</label>
+                        <input type="radio" id="des4-nc" name="que_0.1.4" value="NC"><label for="des4-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>5. Are structural diagrams (Class, Object, etc.) well defined and understood?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des5-yes" name="que_0.1.5" value="Y" required><label for="des5-yes">Yes</label>
+                        <input type="radio" id="des5-no" name="que_0.1.5" value="N"><label for="des5-no">No</label>
+                        <input type="radio" id="des5-na" name="que_0.1.5" value="NA"><label for="des5-na">N/A</label>
+                        <input type="radio" id="des5-nc" name="que_0.1.5" value="NC"><label for="des5-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>6. Are all class associations clearly defined and understood? (Is it clear which classes provide which services)?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des6-yes" name="que_0.1.6" value="Y" required><label for="des6-yes">Yes</label>
+                        <input type="radio" id="des6-no" name="que_0.1.6" value="N"><label for="des6-no">No</label>
+                        <input type="radio" id="des6-na" name="que_0.1.6" value="NA"><label for="des6-na">N/A</label>
+                        <input type="radio" id="des6-nc" name="que_0.1.6" value="NC"><label for="des6-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>7. Are the classes in the class diagram clear? (What they represent in the architecture design document?)</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des7-yes" name="que_0.1.7" value="Y" required><label for="des7-yes">Yes</label>
+                        <input type="radio" id="des7-no" name="que_0.1.7" value="N"><label for="des7-no">No</label>
+                        <input type="radio" id="des7-na" name="que_0.1.7" value="NA"><label for="des7-na">N/A</label>
+                        <input type="radio" id="des7-nc" name="que_0.1.7" value="NC"><label for="des7-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>8. Is inheritance appropriately used?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des8-yes" name="que_0.1.8" value="Y" required><label for="des8-yes">Yes</label>
+                        <input type="radio" id="des8-no" name="que_0.1.8" value="N"><label for="des8-no">No</label>
+                        <input type="radio" id="des8-na" name="que_0.1.8" value="NA"><label for="des8-na">N/A</label>
+                        <input type="radio" id="des8-nc" name="que_0.1.8" value="NC"><label for="des8-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>9. Are the multiplicities in the use case diagram depicted in the class diagram?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des9-yes" name="que_0.1.9" value="Y" required><label for="des9-yes">Yes</label>
+                        <input type="radio" id="des9-no" name="que_0.1.9" value="N"><label for="des9-no">No</label>
+                        <input type="radio" id="des9-na" name="que_0.1.9" value="NA"><label for="des9-na">N/A</label>
+                        <input type="radio" id="des9-nc" name="que_0.1.9" value="NC"><label for="des9-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>10. Are behavioral diagrams (use case, sequence, activity, etc.) well defined and understood?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des10-yes" name="que_0.1.10" value="Y" required><label for="des10-yes">Yes</label>
+                        <input type="radio" id="des10-no" name="que_0.1.10" value="N"><label for="des10-no">No</label>
+                        <input type="radio" id="des10-na" name="que_0.1.10" value="NA"><label for="des10-na">N/A</label>
+                        <input type="radio" id="des10-nc" name="que_0.1.10" value="NC"><label for="des10-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>11. Is aggregation/containment (if used) clearly defined and understood?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des11-yes" name="que_0.1.11" value="Y" required><label for="des11-yes">Yes</label>
+                        <input type="radio" id="des11-no" name="que_0.1.11" value="N"><label for="des11-no">No</label>
+                        <input type="radio" id="des11-na" name="que_0.1.11" value="NA"><label for="des11-na">N/A</label>
+                        <input type="radio" id="des11-nc" name="que_0.1.11" value="NC"><label for="des11-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>12. Does each case have clearly defined actors and input/output?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des12-yes" name="que_0.1.12" value="Y" required><label for="des12-yes">Yes</label>
+                        <input type="radio" id="des12-no" name="que_0.1.12" value="N"><label for="des12-no">No</label>
+                        <input type="radio" id="des12-na" name="que_0.1.12" value="NA"><label for="des12-na">N/A</label>
+                        <input type="radio" id="des12-nc" name="que_0.1.12" value="NC"><label for="des12-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>13. Is all concurrent processing (if used) clearly understood and reflected in the sequence diagrams?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des13-yes" name="que_0.1.13" value="Y" required><label for="des13-yes">Yes</label>
+                        <input type="radio" id="des13-no" name="que_0.1.13" value="N"><label for="des13-no">No</label>
+                        <input type="radio" id="des13-na" name="que_0.1.13" value="NA"><label for="des13-na">N/A</label>
+                        <input type="radio" id="des13-nc" name="que_0.1.13" value="NC"><label for="des13-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>14. Are all objects used in sequence diagram?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des14-yes" name="que_0.1.14" value="Y" required><label for="des14-yes">Yes</label>
+                        <input type="radio" id="des14-no" name="que_0.1.14" value="N"><label for="des14-no">No</label>
+                        <input type="radio" id="des14-na" name="que_0.1.14" value="NA"><label for="des14-na">N/A</label>
+                        <input type="radio" id="des14-nc" name="que_0.1.14" value="NC"><label for="des14-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>15. Does the sequence diagram match class diagram?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des15-yes" name="que_0.1.15" value="Y" required><label for="des15-yes">Yes</label>
+                        <input type="radio" id="des15-no" name="que_0.1.15" value="N"><label for="des15-no">No</label>
+                        <input type="radio" id="des15-na" name="que_0.1.15" value="NA"><label for="des15-na">N/A</label>
+                        <input type="radio" id="des15-nc" name="que_0.1.15" value="NC"><label for="des15-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>16. Are the symbols used in all diagrams correspond to UML standards?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="des16-yes" name="que_0.1.16" value="Y" required><label for="des16-yes">Yes</label>
+                        <input type="radio" id="des16-no" name="que_0.1.16" value="N"><label for="des16-no">No</label>
+                        <input type="radio" id="des16-na" name="que_0.1.16" value="NA"><label for="des16-na">N/A</label>
+                        <input type="radio" id="des16-nc" name="que_0.1.16" value="NC"><label for="des16-nc">NC</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <h2>STUDENT PERFORMANCE EVALUATION</h2>
+                <table id="performance-table">
+                    <thead id="performance-thead"></thead>
+                    <tbody id="performance-tbody"></tbody>
+                    <tfoot id="performance-tfoot"></tfoot>
+                </table>
+            </div>
+
+            <div class="comment-box">
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="c2" placeholder="Enter any additional comments here"></textarea>
+            </div>
+
+            <div class="save-section">
+                <button type="button" id="save-form" onclick="saveForm()">💾 Save Form</button>
+            </div>
+
+            <div class="button-group">
+                <button type="button" id="back-review" onclick="previousReview()">⬅ Previous Review</button>
+                <button type="button" id="generate-pdf" onclick="generatePDF()">📄 Generate PDF</button>
+                <button type="button" id="next-review" onclick="nextReview()">Next Review ➡</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/review0.js') }}"></script>
+
+</body>
+
+</html>

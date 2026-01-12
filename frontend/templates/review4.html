@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Review IV - Testing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common-styles.css') }}">
+</head>
+
+<body>
+    <a href="/auth/logout" class="logout-btn">Logout ➜]</a>
+    <div class="page-header">
+        <div class="header-center">
+            <h1>Project Review - IV</h1>
+        </div>
+        <div class="menu-container">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+            </button>
+
+            <div class="menu-dropdown" id="menuDropdown">
+                <!-- Admin-only items -->
+                {% if is_admin %}
+                <a href="/data-manager" class="menu-item">
+                    <span class="icon">🗄️</span>
+                    Database Manager
+                </a>
+
+
+                <a href="/pdf-viewer" class="menu-item">
+                    <span class="icon">📄</span>
+                    Generated PDFs
+                </a>
+                {% endif %}
+                <a href="/scheduler" class="menu-item">
+                    <span class="icon">📅</span>
+                    Review Scheduler
+                </a>
+                <a href="/attendance-dashboard" class="menu-item">
+                    <span class="icon">🙋</span>
+                    Attendance
+                </a>
+                <div class="menu-divider"></div>
+
+
+                <!-- Review Pages (Available to all logged-in users) -->
+                <a href="/review1" class="menu-item ">
+                    <span class="icon">📋</span>
+                    Review I - Scope
+                </a>
+
+                <a href="/review2" class="menu-item">
+                    <span class="icon">🎨</span>
+                    Review II - Design
+                </a>
+                <a href="/review0" class="menu-item ">
+                    <span class="icon">📌</span>
+                    MOCK Review
+                </a>
+                <a href="/review3" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    Review III - Implementation
+                </a>
+
+                <a href="/review4" class="menu-item current">
+                    <span class="icon">🧪</span>
+                    Review IV - Testing
+                </a>
+
+                <a href="/final-sheet" class="menu-item">
+                    <span class="icon">📊</span>
+                    Review V - Final
+                </a>
+
+                <div class="menu-divider"></div>
+
+                <a href="/auth/logout" class="menu-item">
+                    <span class="icon">🚪</span>
+                    Logout ➜]
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <form id="form-data">
+
+            <label for="group_id">Group ID:</label>
+            <input type="text" id="group_id" name="group_id" placeholder="e.g., BIA-01" required autocomplete="off">
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+
+            <!-- ATTENDANCE SECTION -->
+            <div class="section">
+                <h3>ATTENDANCE</h3>
+                <div class="attendance-container">
+                    <div class="attendance-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Student Name</th>
+                                    <th>Present</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-tbody">
+                                <!-- Dynamically populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IMPLEMENTATION AND TESTING QUESTIONNAIRE -->
+            <div class="section">
+                <h3>IMPLEMENTATION AND TESTING</h3>
+
+                <div class="question">
+                    <label>1. Is every feature tested?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_1-y" name="que_4.1.1" value="Y" required>
+                        <label for="q4_1_1-y">Yes</label>
+                        <input type="radio" id="q4_1_1-n" name="que_4.1.1" value="N">
+                        <label for="q4_1_1-n">No</label>
+                        <input type="radio" id="q4_1_1-na" name="que_4.1.1" value="NA">
+                        <label for="q4_1_1-na">N/A</label>
+                        <input type="radio" id="q4_1_1-nc" name="que_4.1.1" value="NC">
+                        <label for="q4_1_1-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>2. Are all functions, user screens and navigation tested?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_2-y" name="que_4.1.2" value="Y" required>
+                        <label for="q4_1_2-y">Yes</label>
+                        <input type="radio" id="q4_1_2-n" name="que_4.1.2" value="N">
+                        <label for="q4_1_2-n">No</label>
+                        <input type="radio" id="q4_1_2-na" name="que_4.1.2" value="NA">
+                        <label for="q4_1_2-na">N/A</label>
+                        <input type="radio" id="q4_1_2-nc" name="que_4.1.2" value="NC">
+                        <label for="q4_1_2-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>3. Are test cases designed? (manual and automated)</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_3-y" name="que_4.1.3" value="Y" required>
+                        <label for="q4_1_3-y">Yes</label>
+                        <input type="radio" id="q4_1_3-n" name="que_4.1.3" value="N">
+                        <label for="q4_1_3-n">No</label>
+                        <input type="radio" id="q4_1_3-na" name="que_4.1.3" value="NA">
+                        <label for="q4_1_3-na">N/A</label>
+                        <input type="radio" id="q4_1_3-nc" name="que_4.1.3" value="NC">
+                        <label for="q4_1_3-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>4. Is testing tool used?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_4-y" name="que_4.1.4" value="Y" required>
+                        <label for="q4_1_4-y">Yes</label>
+                        <input type="radio" id="q4_1_4-n" name="que_4.1.4" value="N">
+                        <label for="q4_1_4-n">No</label>
+                        <input type="radio" id="q4_1_4-na" name="que_4.1.4" value="NA">
+                        <label for="q4_1_4-na">N/A</label>
+                        <input type="radio" id="q4_1_4-nc" name="que_4.1.4" value="NC">
+                        <label for="q4_1_4-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>5. Is result analysis done properly and proper conclusion drawn?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="q4_1_5-y" name="que_4.1.5" value="Y" required>
+                        <label for="q4_1_5-y">Yes</label>
+                        <input type="radio" id="q4_1_5-n" name="que_4.1.5" value="N">
+                        <label for="q4_1_5-n">No</label>
+                        <input type="radio" id="q4_1_5-na" name="que_4.1.5" value="NA">
+                        <label for="q4_1_5-na">N/A</label>
+                        <input type="radio" id="q4_1_5-nc" name="que_4.1.5" value="NC">
+                        <label for="q4_1_5-nc">NC</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <label>6. Implementation status (code completion in percentage)</label>
+                    <div class="numeric-input">
+                        <div><input type="number" id="q4_1_6" name="que_4.1.6" min="0" max="100" step="0.1"
+                                placeholder="0-100" required></div>
+                        <div class="per">%</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PERFORMANCE EVALUATION TABLE (DYNAMIC) -->
+            <div class="table-responsive">
+                <h2 class="header">STUDENT PERFORMANCE EVALUATION</h2>
+                <table>
+                    <thead id="performance-thead">
+                        <!-- Dynamically generated -->
+                    </thead>
+                    <tbody id="performance-tbody">
+                        <!-- Dynamically generated -->
+                    </tbody>
+                    <tfoot id="performance-tfoot">
+                        <!-- Dynamically generated -->
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- COMMENTS -->
+            <div class="comment-box">
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments" placeholder="Enter any additional comments here"></textarea>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="save-section">
+                <button type="button" id="save-form" onclick="saveForm()">💾 Save Form</button>
+            </div>
+
+            <div class="button-group">
+                <button type="button" id="back-review" onclick="previousReview()">⬅ Previous Review</button>
+                <button type="button" id="generate-pdf" onclick="generatePDF()">📄 Generate PDF</button>
+                <button type="button" id="next-review" onclick="nextReview()">Next Review ➡</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/review4.js') }}"></script>
+    <script>
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeTheme();
+        });
+
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'dark' : 'light');
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            document.body.classList.add('theme-transitioning');
+
+            const toggleBtn = document.querySelector('.theme-toggle');
+            if (toggleBtn) {
+                toggleBtn.classList.add('rotating');
+                setTimeout(() => toggleBtn.classList.remove('rotating'), 500);
+            }
+
+            setTheme(newTheme);
+
+            setTimeout(() => document.body.classList.remove('theme-transitioning'), 300);
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+
+            const toggleBtn = document.querySelector('.theme-toggle');
+            if (toggleBtn) {
+                toggleBtn.setAttribute('aria-label',
+                    theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'
+                );
+            }
+        }
+    </script>
+</body>
+
+</html>

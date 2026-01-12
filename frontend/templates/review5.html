@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Review Summary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common-styles.css') }}">
+</head>
+
+<body>
+    <script src="{{ url_for('static', filename='js/review-common.js') }}"></script>
+    <a href="/auth/logout" class="logout-btn">Logout</a>
+    <div class="page-header">
+        <div class="header-left"></div>
+        <div class="header-center">
+            <h1>Final Review Summary</h1>
+        </div>
+        <div class="menu-container">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+                <span class="menu-line"></span>
+            </button>
+
+            <div class="menu-dropdown" id="menuDropdown">
+                <!-- Database Management -->
+                <a href="/data-manager" class="menu-item">
+                    <span class="icon">🗄️</span>
+                    Database Manager
+                </a>
+                <a href="/scheduler" class="menu-item ">
+                    <span class="icon">📅</span>
+                    Review Scheduler
+                </a>
+                <a href="/attendance-dashboard" class="menu-item">
+                    <span class="icon">🙋</span>
+                    Attendance
+                </a>
+                <div class="menu-divider"></div>
+
+                <!-- Review Pages -->
+                <a href="/review1" class="menu-item">
+                    <span class="icon">📝</span>
+                    Review I - Scope
+                </a>
+
+                <a href="/review2" class="menu-item">
+                    <span class="icon">🎨</span>
+                    Review II - Design
+                </a>
+
+                <a href="/review3" class="menu-item">
+                    <span class="icon">⚙️</span>
+                    Review III - Implementation
+                </a>
+
+                <a href="/review4" class="menu-item">
+                    <span class="icon">🧪</span>
+                    Review IV - Testing
+                </a>
+
+                <a href="/review5" class="menu-item current">
+                    <span class="icon">📊</span>
+                    Review V - Final
+                </a>
+
+                <div class="menu-divider"></div>
+
+                <!-- Additional Options -->
+                <a href="/" class="menu-item">
+                    <span class="icon">🏠</span>
+                    Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Group ID Selection -->
+        <div class="group-selection">
+            <label for="group_id_select">Select Group ID:</label>
+            <div class="group-input-container">
+                <input type="text" id="group_id_select" placeholder="Enter Group ID (e.g., BIA-01)" required
+                    autocomplete="off">
+                <button type="button" class="load-btn" onclick="loadGroupData()">Load Review Data</button>
+            </div>
+            <div id="status-message"></div>
+        </div>
+
+        <form id="form-data" style="display:none;">
+
+            <label for="group_id">Group ID:</label>
+            <input type="text" id="group_id" name="group_id" required readonly>
+
+            <div class="table-responsive">
+                <h3>Student Performance Summary</h3>
+                <table id="summary-table">
+                    <thead id="table-header">
+                        <!-- Dynamic header will be generated here -->
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Dynamic rows will be generated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <label for="comments">Final Comments:</label>
+                <textarea id="comments" name="c5" rows="4" placeholder="Enter any final comments here"></textarea>
+            </div>
+
+            <div class="button-group">
+                <button type="button" id="back-review" onclick="previousReview()">Back</button>
+                <button type="button" id="generate-pdf" onclick="generatePDF()">Generate Final PDF</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/final_sheet.js') }}"></script>
+</body>
+
+</html>

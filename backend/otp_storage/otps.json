@@ -1,0 +1,18 @@
+{
+  "atharvc_t23119@students.isquareit.edu.in_registration": {
+    "otp": "442982",
+    "purpose": "registration",
+    "created_at": "2026-01-09T00:51:36.121370",
+    "expires_at": "2026-01-09T01:01:36.121366",
+    "attempts": 0,
+    "verified": false
+  },
+  "atharvchemate369@gmail.com_password_reset": {
+    "otp": "108201",
+    "purpose": "password_reset",
+    "created_at": "2026-01-09T01:14:37.336589",
+    "expires_at": "2026-01-09T01:24:37.336577",
+    "attempts": 3,
+    "verified": false
+  }
+}

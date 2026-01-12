@@ -1,0 +1,118 @@
+@api_bp.route("/review0/attendance", methods=["POST"])
+@login_required
+def api_save_review0_attendance():
+    data = request.get_json()
+    group_id = data.get("group_id")
+    attendance = data.get("attendance")
+
+    if not group_id or attendance is None:
+        return jsonify({"error": "Invalid payload"}), 400
+
+    success = update_review0_attendance(group_id, attendance)
+    if success:
+        return jsonify({"message": "Attendance saved successfully"}), 200
+    return jsonify({"error": "Failed to save attendance"}), 500
+
+
+@api_bp.route("/review0/members", methods=["GET"])
+@login_required
+def api_get_review0_members():
+    group_id = request.args.get("group_id")
+    if not group_id:
+        return jsonify({"error": "Missing group_id"}), 400
+    members = get_review0_members(group_id)
+    return jsonify(members)
+
+
+@api_bp.route("/review0/marks", methods=["POST"])
+@login_required
+def api_save_review0_marks():
+    data = request.get_json()
+    marks_list = data.get("marks", [])
+
+    if not marks_list:
+        return jsonify({"error": "Invalid payload - marks list is empty"}), 400
+
+    for marks in marks_list:
+        if not marks.get("group_id") or not marks.get("roll_no"):
+            return jsonify({"error": "Each mark entry must have group_id and roll_no"}), 400
+
+    success = save_review0_marks(marks_list)
+    if success:
+        return jsonify({"success": True, "message": "Marks saved/updated successfully"}), 200
+    return jsonify({"error": "Failed to save marks"}), 500
+
+
+@api_bp.route("/review0/marks", methods=["GET"])
+@login_required
+def api_get_review0_marks():
+    group_id = request.args.get("group_id")
+    if not group_id:
+        return jsonify({"error": "Missing group_id"}), 400
+    marks = get_review0_marks(group_id)
+    return jsonify(marks)
+
+
+@api_bp.route("/review0/responses", methods=["POST"])
+@login_required
+def api_save_review0_responses():
+    data = request.get_json()
+    group_id = data.get("group_id")
+    date = data.get("date")
+    comments = data.get("comments", "")
+    responses = data.get("responses", [])
+
+    if not group_id or not date:
+        return jsonify({"error": "Missing group_id or date"}), 400
+
+    result = save_review0_responses(group_id, date, comments, responses)
+    if result.get("success"):
+        return (
+            jsonify(
+                {
+                    "success": True,
+                    "message": f"Responses {result['action']} successfully",
+                    "action": result["action"],
+                    "group_id": result["group_id"],
+                }
+            ),
+            200,
+        )
+    return jsonify({"error": result.get("error", "Failed to save responses")}), 500
+
+
+@api_bp.route("/review0/responses", methods=["GET"])
+@login_required
+def api_get_review0_responses():
+    group_id = request.args.get("group_id")
+    if not group_id:
+        return jsonify({"error": "Missing group_id"}), 400
+    submission = get_review0_responses(group_id)
+    if submission:
+        return jsonify(submission), 200
+    return jsonify({"message": "No submission found"}), 404
+
+
+@api_bp.route("/review0/generate-pdf", methods=["POST"])
+@user_required
+def api_generate_review0_pdf():
+    from backend.pdf_generator import generate_review0_pdf
+
+    data = request.get_json()
+    group_id = data.get("group_id")
+    if not group_id:
+        return jsonify({"error": "Missing group_id"}), 400
+    result = generate_review0_pdf(group_id)
+    if result["success"]:
+        return (
+            jsonify(
+                {
+                    "success": True,
+                    "message": "PDF generated successfully",
+                    "pdf_url": f"/pdf/generate/2/{group_id}",
+                    "download_url": f"/pdf/download/2/{group_id}",
+                }
+            ),
+            200,
+        )
+    return jsonify({"error": result["error"]}), 500
